@@ -1,6 +1,5 @@
 package com.hachatml.claserecyclerview
 
-import android.graphics.Paint.Align
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -11,14 +10,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -26,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hachatml.claserecyclerview.Views.SuperHero
 import com.hachatml.claserecyclerview.ui.theme.ClaseRecyclerViewTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +49,11 @@ class MainActivity : ComponentActivity() {
                     //SimpleRecyclerView()
                     //Ejercicio 2 hasta apartado 6
                     //SuperHeroView()
-                    SuperHeroViewColumn()
+                    //Apartado 7 (incluyendo Toast)
+                    //SuperHeroViewColumn()
+                    //Apartado 8 (para obtener un resultado igual al de la imagen, eliminaríamos el
+                    //padding de ItemHero)
+                    SuperHeroViewVerticalGrid()
                 }
             }
         }
@@ -84,7 +85,6 @@ fun SimpleRecyclerView() {
 fun ItemHero(Superhero: Superhero, onItemSelected: (Superhero) -> Unit) {
     Card(
         modifier = Modifier
-            .width(200.dp)
             .padding(20.dp)
             .clickable { onItemSelected(Superhero) },
         border = BorderStroke(2.dp, Color.Red)
@@ -110,12 +110,13 @@ fun ItemHero(Superhero: Superhero, onItemSelected: (Superhero) -> Unit) {
 
 @Composable
 fun SuperHeroView() {
-    var context = LocalContext.current
+    val context = LocalContext.current
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(getSuperheroes()) {
-            ItemHero(Superhero = it
+            ItemHero(
+                Superhero = it
             ) {
                 Toast.makeText(context, it.realName, Toast.LENGTH_SHORT).show()
             }
@@ -124,7 +125,7 @@ fun SuperHeroView() {
 }
 
 fun getSuperheroes(): MutableList<Superhero> {
-    var SuperheroList = mutableListOf<Superhero>()
+    val SuperheroList = mutableListOf<Superhero>()
     SuperheroList.add(Superhero("Spiderman", "Peter Parker", "Marvel", R.drawable.spiderman))
     SuperheroList.add(Superhero("Wolverine", "James Howlett", "Marvel", R.drawable.logan))
     SuperheroList.add(Superhero("Batman", "Bruce Wayne", "DC", R.drawable.batman))
@@ -139,9 +140,21 @@ fun getSuperheroes(): MutableList<Superhero> {
 //Apartado7
 @Composable
 fun SuperHeroViewColumn() {
-    var context = LocalContext.current
+    val context = LocalContext.current
     LazyColumn(
     ) {
+        items(getSuperheroes()) {
+            ItemHero(Superhero = it) {
+                Toast.makeText(context, it.realName, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
+//Actividad 8. Para conseguir el resultado igual al de la foto, bastaría con eliminar el padding de ItemHero
+@Composable
+fun SuperHeroViewVerticalGrid() {
+    val context = LocalContext.current
+        LazyVerticalGrid(columns = GridCells.Fixed(2)){
         items(getSuperheroes()) {
             ItemHero(Superhero = it) {
                 Toast.makeText(context, it.realName, Toast.LENGTH_SHORT).show()
